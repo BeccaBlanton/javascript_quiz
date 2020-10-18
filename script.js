@@ -12,3 +12,11 @@ give end game statement
 form that allows to enter intials
 initials and score posted onto page
 */
+//Starting elements to pull from HTML for main elements and timer function
+var startBtn = document.getElementById('start')
+var quiz = document.getElementById('quiz');
+var results = document.getElementById('results');
+var submitBtn = document.getElementById('submit');
+var minutesDisplay = document.querySelector("#minutes");
+var secondsDisplay = document.querySelector("#seconds");
+
