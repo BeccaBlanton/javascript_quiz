@@ -69,3 +69,31 @@ function startTimer() {
       }
 
 startBtn.addEventListener("click", startTimer);
+
+//Array of objects for quiz questions
+var questions = [{
+    question: "1.What operator is used to assign a value to a Variable?",
+    choices: ["x", "-", "=", "==="],
+    correctAnswer: 2
+}, {
+    question: "2. What does DOM stand for?",
+    choices: ["Document object Model", "Document object Media", "Direct object Model", "Document operating Media"],
+    correctAnswer: 0
+}, {
+    question: "3. Which event can be used when the user pushes a keyboard key?",
+    choices: ["onkeypress", "onkeydown", "onpushkey", "keyover"],
+    correctAnswer: 1
+}, {
+    question: "4. How can you comment out more than one line?",
+    choices: ["!//comment//", "/*comment*/", "//comment//", "<!--comment-->"],
+    correctAnswer: 1
+}, {
+    question: "5. Which HTML element do you put in Javascript?",
+    choices: ["<js>", "<javascript>", "<script>", "<jscript>"],
+    correctAnswer: 2
+},{
+	question: "6. Which functions would you use to add an element at the beginning of an array and one at the end?",
+    choices: ["push,unshift", "unshift,push", "first,push", "unshift,last"],
+    correctAnswer: 1
+}];
+
