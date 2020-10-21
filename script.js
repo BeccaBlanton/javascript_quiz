@@ -2,7 +2,6 @@
 Code Quiz
 first question appears on screen
 question contains text and multiple buttons for multiple choice
-
 once one button is pressed page refreshes to next question
 if wrong button is pressed, then time will be subtracted from total
 after set amount of questions or timer goes off which ever comes first
@@ -39,8 +38,8 @@ function startTimer() {
     minutesDisplay.textContent = getFormattedMinutes();
     secondsDisplay.textContent = getFormattedSeconds();
     if (secondsElapsed >= totalSeconds) {
-       alert("Time's Up!")
         stopTimer();
+        showResults()
       }
     }
     function getFormattedMinutes() {
@@ -92,6 +91,11 @@ function startQuiz(){
 quiz.innerHTML = output.join('');
 }
 
+function stopTimer(){
+  minutesDisplay.textContent = "0";
+    secondsDisplay.textContent = "00";
+  totalSeconds = 0;
+}
 
 //results function. pull correct answer from correct answer section in array.
 function showResults(){
@@ -113,10 +117,12 @@ quizQuestions.forEach( (curQuestion,questionNum) => {
   }
   else{
     quizAnswers[questionNum].style.color = 'red';
+    totalSeconds - 30;
   }
 });
 
 results.innerHTML = `${numCorrect} out of ${quizQuestions.length}`;
+alert("You got " + numCorrect + " out of 6");
 }
 
 //Array of objects for quiz questions
@@ -178,4 +184,4 @@ var quizQuestions = [
 }];
 
 submitBtn.addEventListener('click', showResults);
-
+submitBtn.addEventListener('click', stopTimer)
