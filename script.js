@@ -2,6 +2,7 @@
 Code Quiz
 first question appears on screen
 question contains text and multiple buttons for multiple choice
+
 once one button is pressed page refreshes to next question
 if wrong button is pressed, then time will be subtracted from total
 after set amount of questions or timer goes off which ever comes first
@@ -23,8 +24,6 @@ var output =[];
 var totalSeconds = 300;
 var secondsElapsed = 0;
 var interval;
-console.log(totalSeconds)
-console.log(secondsElapsed)
 //Timer to start when user clicks Start for the quiz
 function startTimer() {
     if (totalSeconds > 0) {
@@ -53,8 +52,7 @@ function startTimer() {
         } else {
           formattedMinutes = minutesLeft;
         }
-        console.log(secondsLeft)
-    console.log(minutesLeft)
+        
         return formattedMinutes;
       }
     function getFormattedSeconds() {
@@ -70,66 +68,10 @@ function startTimer() {
 
 startBtn.addEventListener("click", startTimer);
 
-//Array of objects for quiz questions
-var quizQuestions = [
-  {
-    question: "1.What operator is used to assign a value to a Variable?",
-    choices: {
-      a: "x", 
-      b: "-", 
-      c:"=", 
-      d:"==="
-    },
-    correctAnswer: "c"
-}, {
-    question: "2. What does DOM stand for?",
-    choices: {
-      a: "Document object Model", 
-      b: "Document object Media", 
-      c: "Direct object Model", 
-      d:"Document operating Media"
-    },
-    correctAnswer: "a"
-},{
-    question: "3. Which event can be used when the user pushes a keyboard key?",
-    choices: {
-      a:"onkeypress", 
-      b: "onkeydown", 
-      c: "onpushkey", 
-      d: "keyover",
-    },
-    correctAnswer: "b"
-}, {
-    question: "4. How can you comment out more than one line?",
-    choices: {
-      a: "!//comment//", 
-      b: "/*comment*/", 
-      c: "//comment//", 
-      d:"<!--comment-->",
-    },
-    correctAnswer: "b"
-}, {
-    question: "5. Which HTML element do you put in Javascript?",
-    choices: {
-      a: "<js>", 
-      b: "<javascript>", 
-      c: "<script>", 
-      d: "<jscript>",
-    },
-    correctAnswer: "c"
-},{
-	question: "6. Which functions would you use to add an element at the beginning of an array and one at the end?",
-    choices: {
-      a: "push,unshift", 
-      b: "unshift,push", 
-      c: "first,push", 
-      d: "unshift,last",
-    },
-    correctAnswer: "b"
-}];
+startBtn.addEventListener('click', startQuiz);
 
 //start functions to show quiz on page
-function mainQuiz(){
+function startQuiz(){
   quizQuestions.forEach( (curQuestion, questionNum)=>{
   var choices = [];
   for(letter in curQuestion.choices){
@@ -152,28 +94,88 @@ quiz.innerHTML = output.join('');
 
 
 //results function. pull correct answer from correct answer section in array.
-function results(){
+function showResults(){
 
-var quizAnswers = quiz.querySelectorAll('.answers')
+var quizAnswers = quiz.querySelectorAll('.choices')
 var numCorrect = 0;
+console.log(quizAnswers)
 
 quizQuestions.forEach( (curQuestion,questionNum) => {
   var eachAnswer = quizAnswers[questionNum];
   var selector = `input[name=question${questionNum}]:checked`;
   var answerPicked = (eachAnswer.querySelector(selector)|| {}).value;
+  console.log(eachAnswer)
 
   if(answerPicked === curQuestion.correctAnswer){
     numCorrect++;
-
+    quizAnswers[questionNum].style.color = "lightgreen";
+    console.log(numCorrect)
   }
-
+  else{
+    quizAnswers[questionNum].style.color = 'red';
+  }
 });
 
 results.innerHTML = `${numCorrect} out of ${quizQuestions.length}`;
 }
 
-mainQuiz()
+//Array of objects for quiz questions
+var quizQuestions = [
+  {
+    question: "1.What operator is used to assign a value to a Variable?",
+    choices: {
+      a: " x ", 
+      b: " - ", 
+      c:" = ", 
+      d:" === "
+    },
+    correctAnswer: "c"
+}, {
+    question: "2. What does DOM stand for?",
+    choices: {
+      a: " Document object Model ", 
+      b: " Document object Media ", 
+      c: " Direct object Model ", 
+      d:" Document operating Media "
+    },
+    correctAnswer: "a"
+},{
+    question: "3. Which event can be used when the user pushes a keyboard key?",
+    choices: {
+      a:" onkeypress ", 
+      b: " onkeydown ", 
+      c: " onpushkey ", 
+      d: " keyover ",
+    },
+    correctAnswer: "b"
+}, {
+    question: "4. How can you comment out more than one line?",
+    choices: {
+      a: " !//comment// ", 
+      b: " /*comment*/ ", 
+      c: " //comment// ", 
+      d:" <!--comment--> ",
+    },
+    correctAnswer: "b"
+}, {
+    question: "5. What will this output? var a = [1, 2, 3]; console.log(a[6]);?",
+    choices: {
+      a: " unknown string ", 
+      b: " syntax error ", 
+      c: " undefined ", 
+      d: " 0 ",
+    },
+    correctAnswer: "c"
+},{
+	question: "6. Which functions would you use to add an element at the beginning of an array and one at the end?",
+    choices: {
+      a: " push,unshift ", 
+      b: " unshift,push ", 
+      c: " first,push ", 
+      d: " unshift,last ",
+    },
+    correctAnswer: "b"
+}];
 
-
-submitBtn.addEventListener('click', results);
+submitBtn.addEventListener('click', showResults);
 
