@@ -12,12 +12,9 @@ initials and score posted onto page
 */
 //Starting elements to pull from HTML for main elements and timer function
 var startBtn = document.getElementById('startBtn')
-var quiz = document.getElementById('quiz');
-var results = document.getElementById('results');
 var submitBtn = document.getElementById('submitBtn');
 var minutesDisplay = document.querySelector("#minutes");
 var secondsDisplay = document.querySelector("#seconds");
-var output =[];
 
 //Timer Variables
 var totalSeconds = 300;
@@ -29,7 +26,6 @@ function startTimer() {
         interval = setInterval(function() {
           secondsElapsed++;
           renderTime();
-          console.log(renderTime)
         }, 1000);
     } 
   }
@@ -39,7 +35,6 @@ function startTimer() {
     secondsDisplay.textContent = getFormattedSeconds();
     if (secondsElapsed >= totalSeconds) {
         stopTimer();
-        showResults()
       }
     }
     function getFormattedMinutes() {
@@ -67,121 +62,100 @@ function startTimer() {
 
 startBtn.addEventListener("click", startTimer);
 
-startBtn.addEventListener('click', startQuiz);
 
-//start functions to show quiz on page
-function startQuiz(){
-  quizQuestions.forEach( (curQuestion, questionNum)=>{
-  var choices = [];
-  for(letter in curQuestion.choices){
-    choices.push(
-      `<label>
-      <input type="radio" name="question${questionNum}" value="${letter}">
-      ${letter} :
-      ${curQuestion.choices[letter]}
-      </label>`
-    );
-  }
-  output.push(
-    `<div class="question"> ${curQuestion.question}</div>
-    <div class="choices"> ${choices.join('')}</div>`
-  )
+
+var ul = document.getElementById('ul')
+var nextButton = document.getElementById('btnNext');
+var quizbox = document.getElementById('questionBox')
+var opt1 = document.getElementById('opt1')
+var opt2 = document.getElementById('opt2')
+var opt3 = document.getElementById('opt3')
+var opt4 = document.getElementById('opt4')
+
+var app={
+    questions: [
+        {
+          question: "What operator is used to assign a value to a Variable?",
+          choices: [" x ", " - ", " = ", " === "],
+          correctAnswer: 3
+      }, {
+          question: "What does DOM stand for?",
+          choices: [" Document object Model ", " Document object Media ", " Direct object Model ", " Document operating Media "],
+          correctAnswer: 1
+      },{
+          question: "Which event can be used when the user pushes a keyboard key?",
+          choices: [" onkeypress ", " onkeydown ", " onpushkey ", " keyover "],
+          correctAnswer: 2
+      }, {
+          question: "How can you comment out more than one line?",
+          choices: [" !//comment// ", " /*comment*/ ", " //comment// "," <!--comment--> "],
+          correctAnswer: 2
+      }, {
+          question: "What will this output? var a = [1, 2, 3]; console.log(a[6]);?",
+          choices: [" unknown string ", " syntax error ", " undefined ", " 0 "],
+          correctAnswer: 3
+      },{
+          question: "Which functions would you use to add an element at the beginning of an array and one at the end?",
+          choices: [" push,unshift ", " unshift,push ", " first,push ", " unshift,last "],
+          correctAnswer: 2
+      }
+      ],
+        index:0,
+        load:function(){
+            if(this.index<=this.questions.length-1){
+                quizbox.innerHTML=this.index+1 + ". " +this.questions[this.index].question;
+                opt1.innerHTML=this.questions[this.index].choices[0];
+                opt2.innerHTML=this.questions[this.index].choices[1];
+                opt3.innerHTML=this.questions[this.index].choices[2];
+                opt4.innerHTML=this.questions[this.index].choices[3];
+            }
+            else {
+                quizbox.innerHTML="Quiz Completed!";
+                ul.style.display="none";
+                nextButton.style.display="none";
+            }
+        },
+        next: function(){
+            this.index++;
+            this.load();
+        },
+        check: function(ele){
+            var id=ele.id.split('');
+            if(id[id.length-1]==this.questions[this.index].correctAnswer){
+                this.score++;
+                ele.className="correct";
+                this.scoreCard();
+            }
+            else{
+                ele.className="wrong";
+            }
+        },
+        preventClick:function(){
+            for(let i=0; i<ul.children.length; i++){
+                ul.children[i].style.pointerEvents="none";
+            }
+        },
+        allowClick:function(){
+            for(let i=0; i<ul.children.length; i++){
+                ul.children[i].style.pointerEvents="auto";
+                ul.children[i].className=''
+            }
+        },
+        score:0,
+        scoreCard:function(){
+            scoreCard.innerHTML= this.score + "/" + this.questions.length;
+        }
 }
-)
-quiz.innerHTML = output.join('');
+
+window.load=app.load();
+
+function button(ele){
+    app.check(ele);
+    app.preventClick();
 }
 
-function stopTimer(){
-  minutesDisplay.textContent = "0";
-    secondsDisplay.textContent = "00";
-  totalSeconds = 0;
+function next(){
+    app.next();
+    app.allowClick();
 }
 
-//results function. pull correct answer from correct answer section in array.
-function showResults(){
-
-var quizAnswers = quiz.querySelectorAll('.choices')
-var numCorrect = 0;
-console.log(quizAnswers)
-
-quizQuestions.forEach( (curQuestion,questionNum) => {
-  var eachAnswer = quizAnswers[questionNum];
-  var selector = `input[name=question${questionNum}]:checked`;
-  var answerPicked = (eachAnswer.querySelector(selector)|| {}).value;
-  console.log(eachAnswer)
-
-  if(answerPicked === curQuestion.correctAnswer){
-    numCorrect++;
-    quizAnswers[questionNum].style.color = "lightgreen";
-    console.log(numCorrect)
-  }
-  else{
-    quizAnswers[questionNum].style.color = 'red';
-    totalSeconds - 30;
-  }
-});
-
-results.innerHTML = `${numCorrect} out of ${quizQuestions.length}`;
-alert("You got " + numCorrect + " out of 6");
-}
-
-//Array of objects for quiz questions
-var quizQuestions = [
-  {
-    question: "1.What operator is used to assign a value to a Variable?",
-    choices: {
-      a: " x ", 
-      b: " - ", 
-      c:" = ", 
-      d:" === "
-    },
-    correctAnswer: "c"
-}, {
-    question: "2. What does DOM stand for?",
-    choices: {
-      a: " Document object Model ", 
-      b: " Document object Media ", 
-      c: " Direct object Model ", 
-      d:" Document operating Media "
-    },
-    correctAnswer: "a"
-},{
-    question: "3. Which event can be used when the user pushes a keyboard key?",
-    choices: {
-      a:" onkeypress ", 
-      b: " onkeydown ", 
-      c: " onpushkey ", 
-      d: " keyover ",
-    },
-    correctAnswer: "b"
-}, {
-    question: "4. How can you comment out more than one line?",
-    choices: {
-      a: " !//comment// ", 
-      b: " /*comment*/ ", 
-      c: " //comment// ", 
-      d:" <!--comment--> ",
-    },
-    correctAnswer: "b"
-}, {
-    question: "5. What will this output? var a = [1, 2, 3]; console.log(a[6]);?",
-    choices: {
-      a: " unknown string ", 
-      b: " syntax error ", 
-      c: " undefined ", 
-      d: " 0 ",
-    },
-    correctAnswer: "c"
-},{
-	question: "6. Which functions would you use to add an element at the beginning of an array and one at the end?",
-    choices: {
-      a: " push,unshift ", 
-      b: " unshift,push ", 
-      c: " first,push ", 
-      d: " unshift,last ",
-    },
-    correctAnswer: "b"
-}];
-
-submitBtn.addEventListener('click', showResults);
-submitBtn.addEventListener('click', stopTimer)
