@@ -22,3 +22,15 @@ body{
 main{
   background-color: #5D5C61;
 }
+ol{
+  background-color: #5D5C61 ;
+  color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center; 
+}
+
+.btn.btn-primary{
+  background-color: #557A95;
+  border: #5D5C61;
+
+}
