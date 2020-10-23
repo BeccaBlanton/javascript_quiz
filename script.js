@@ -107,6 +107,13 @@ function renderTime() {
       return formattedSeconds;
     }
 
+    function stopTimer(){
+      clearInterval(interval)
+      secondsElapsed = 0;
+    setTime();
+    renderTime();
+    }
+
 //first question appears on screen with multiple buttons
 //if correct, get one point
 //else incorrect answer. and time deducted from timer
@@ -144,14 +151,14 @@ function loadNextQuestion(question){
     choice2.setAttribute("class", "btn btn-primary")
     choice3.setAttribute("class", "btn btn-primary")
     choice4.setAttribute("class", "btn btn-primary")
-
+    console.log(currentQuestion)
 
 
   }
   
 
 }
-    console.log(currentQuestion)
+    
 //load up question
 //continue until all questions
 //end quiz when time runs out or al questions are answered
@@ -159,6 +166,11 @@ function loadNextQuestion(question){
 //continue until all questions
 //end quiz when time runs out or al questions are answered
 function saveData(){
+  alert("Thanks for playing!! you got " + score +" out of 6 correct");
+  stopTimer();
+  var initialsForm = document.createElement("input");
+  initialsForm.setAttribute('placeholder', "name")
+  main.appendChild(initialsForm)
 //give out alert end message
 //form pops up to fill in initials and put in score
 //score loads onto page.
@@ -171,6 +183,7 @@ function saveData(){
 
 //button for init game
 document.querySelector('#startBtn').addEventListener('click', initQuiz)
+document.querySelector('#submitBtn').addEventListener('click', saveData)
 
 //function(e){
     //if(e.target.classlist.contains('option')){
