@@ -16,9 +16,11 @@ var submitBtn = document.getElementById('submitBtn');
 var minutesDisplay = document.querySelector("#minutes");
 var secondsDisplay = document.querySelector("#seconds");
 var quizBox= document.querySelector('.quizbox')
+var results= document.querySelector(".resultsbox")
 //GLOBALS
 var currentQuestion =''
 var score = 0
+
 
 //Timer Variables
 var totalSeconds = 300;
@@ -31,27 +33,27 @@ var interval;
         {
           question: "What operator is used to assign a value to a Variable?",
           choices: [" x ", " - ", " = ", " === "],
-          correctAnswer: 2
+          correctAnswer: "btn3"
       }, {
           question: "What does DOM stand for?",
           choices: [" Document object Model ", " Document object Media ", " Direct object Model ", " Document operating Media "],
-          correctAnswer: 0
+          correctAnswer: "btn1"
       },{
           question: "Which event can be used when the user pushes a keyboard key?",
           choices: [" onkeypress ", " onkeydown ", " onpushkey ", " keyover "],
-          correctAnswer: 1
+          correctAnswer: "btn2"
       }, {
           question: "How can you comment out more than one line?",
           choices: [" !//comment// ", " /*comment*/ ", " //comment// "," <!--comment--> "],
-          correctAnswer: 1
+          correctAnswer: "btn2"
       }, {
           question: "What will this output? var a = [1, 2, 3]; console.log(a[6]);?",
           choices: [" unknown string ", " syntax error ", " undefined ", " 0 "],
-          correctAnswer: 2
+          correctAnswer: "btn3"
       },{
           question: "Which functions would you use to add an element at the beginning of an array and one at the end?",
           choices: [" push,unshift ", " unshift,push ", " first,push ", " unshift,last "],
-          correctAnswer: 1
+          correctAnswer: "btn2"
       }
       ]
 
@@ -110,28 +112,30 @@ function renderTime() {
     function stopTimer(){
       clearInterval(interval)
       secondsElapsed = 0;
-    setTime();
     renderTime();
     }
 
-//first question appears on screen with multiple buttons
-//if correct, get one point
-//else incorrect answer. and time deducted from timer
+//function runs after one of choices buttons is clicked, then moves to next question
+//time not subtracting if wrong
 function checkAnswers(){
-  if((questionArr[i].choices) === questionArr[i].correctAnswer){
-    score++
-  } else (
-    totalSecond -= 30
-  ) 
-
-  currentQuestion++
-loadNextQuestion(currentQuestion)
-}
-
+   var selection = event.target
+   if(selection.matches('.btn-primary')){
+       var selectedItem = selection.id
+       console.log(selectedItem)
+       //checks if btn pressed matches correctAnswer in array
+       if(selectedItem === questionArr[currentQuestion].correctAnswer){
+       score++}
+      console.log(score)
+   } //if clicked other btn, will deduct time
+       else{
+           totalSeconds=totalSeconds - 30
+       }
+  loadNextQuestion()
+  }
 //press any option and next question loads
-
-function loadNextQuestion(question){
-  for(var i=0; i<questionArr.length; i++){
+//currently loads all questions
+function loadNextQuestion(){
+  var i=0
     var currentQuestion = document.createElement("ol")
     currentQuestion.textContent = questionArr[i].question;
     quizBox.appendChild(currentQuestion)
@@ -148,48 +152,38 @@ function loadNextQuestion(question){
     currentQuestion.appendChild(choice3);
     currentQuestion.appendChild(choice4);
     choice1.setAttribute("class", "btn btn-primary")
+    choice1.setAttribute("id", "btn1")
     choice2.setAttribute("class", "btn btn-primary")
+    choice2.setAttribute("id", "btn2")
     choice3.setAttribute("class", "btn btn-primary")
+    choice3.setAttribute("id", "btn3")
     choice4.setAttribute("class", "btn btn-primary")
+    choice4.setAttribute("id", "btn4")
+    document.querySelector('#btn1').onclick = checkAnswers
+    document.querySelector('#btn2').onclick = checkAnswers
+    document.querySelector('#btn3').onclick = checkAnswers
+    document.querySelector('#btn4').onclick = checkAnswers
+
     console.log(currentQuestion)
-
-
   }
-  
-
-}
-    
-//load up question
-//continue until all questions
-//end quiz when time runs out or al questions are answered
-
-//continue until all questions
 //end quiz when time runs out or al questions are answered
 function saveData(){
   alert("Thanks for playing!! you got " + score +" out of 6 correct");
   stopTimer();
+  //removes questions from screen
+  quizBox.remove()
+  //to load an input form to enter name, then enter score
   var initialsForm = document.createElement("input");
+  results.append(initialsForm)
+  initialsForm.setAttribute('type', "text")
   initialsForm.setAttribute('placeholder', "name")
-  main.appendChild(initialsForm)
-//give out alert end message
-//form pops up to fill in initials and put in score
-//score loads onto page.
+  var finalScore = document.createElement('p');
+  results.appendChild(finalScore)
+  finalScore.textContent = score
 }
-
-
 //Ui logic
 //attach event listeners to all the options
-
-
-//button for init game
+//button for init game and then to submit and saveData
 document.querySelector('#startBtn').addEventListener('click', initQuiz)
 document.querySelector('#submitBtn').addEventListener('click', saveData)
-
-//function(e){
-    //if(e.target.classlist.contains('option')){
-        //return
-    //}
-    //do the thing
-//}
-//button for each answer, runs check answer
 
