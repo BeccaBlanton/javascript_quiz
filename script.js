@@ -19,7 +19,6 @@ var score = 0
 var totalSeconds = 180;
 var timeElapsed = 0;
 var interval;
-var incorrect = 0
 
 //array of questions, choices and answers for Quiz
     var questionArr=[
@@ -99,8 +98,6 @@ function renderTime() {
       }
       return formattedSeconds;
     }
-//90 -108 put in startTimer function. then run incorrect subtraction 
-
 //clears once reaches 0, submit button pressed or all questions are answered
     function stopTimer(){
       clearInterval(interval)
@@ -132,8 +129,7 @@ function checkAnswers(event){
       }
     //if clicked other btn, will deduct time
        else{
-           incorrect++
-           console.log(incorrect)
+           totalSeconds -= 20
        }
        if(i < questionArr.length){
         loadQuestion()
@@ -144,8 +140,10 @@ function checkAnswers(event){
       console.log("correct answer " + questionArr[i-1].correctAnswer)
       console.log("i = " + i)
       console.log("score = " + score)
+
       //increments i to load the next question in loadQuestion function
-   }
+    }
+    return totalSeconds
   }
  //once submit button is pressed or last question answered Alerts Score
 function saveData(){
@@ -193,7 +191,7 @@ addInitialsBtn.addEventListener("click", function(event) {
     highScoreList.appendChild(newHighScore)
     highScoreList.textContent = "Initials: " + lastUser + " " + "Score: "+ score;
 });
-//saved old code for possible timer deduction for incorrect score.
+//saved old code for possible timer deduction for incorrect
 /*if(incorrect === 0){
   console.log("number incorrect " + incorrect)
 timeElapsed = timeElapsed;
