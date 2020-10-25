@@ -50,9 +50,9 @@ main{
 }
 
 footer{
-  background-color: #0B0C10;
-  color: white;
-  font-size: 32px;
+  background-color: #CAFAFE;
+  color: #1F2833;
+  font-size: 20px;
   padding: 2rem;
   border-radius: 5px;
 }

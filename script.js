@@ -10,6 +10,7 @@ var submitBtn = document.getElementById('submitBtn');
 var minutesDisplay = document.querySelector("#minutes");
 var secondsDisplay = document.querySelector("#seconds");
 var quizBox= document.querySelector('.quizbox')
+var resultsBox = document.querySelector(".resultsbox")
 var scoreForm= document.querySelector("#scoreform")
 var quizQuestion = document.querySelector("#quizquestion")
 var choice1 = document.querySelector("#btn1")
@@ -20,8 +21,9 @@ var i = 0
 var score = 0
 //Timer Variables
 var totalSeconds = 180;
-var secondsElapsed = 0;
+var timeElapsed = 0;
 var interval;
+var incorrect = 0
 
 //array of questions, choices and answers for Quiz
     var questionArr=[
@@ -65,9 +67,14 @@ main.setAttribute("style", "display:block")
  //Timer to start when user clicks Start for the quiz
 function startTimer() {
   if (totalSeconds > 0) {
-      interval = setInterval(function() {
-        secondsElapsed++;
-        renderTime();
+    interval = setInterval(function() {
+    timeElapsed++;
+        if(incorrect === 0){
+        var secondsElapsed = timeElapsed
+        renderTime();}
+        if(incorrect > 0){
+          var secondsElasped = timeElapsed + incorrect*20
+        }
       }, 1000);
   } 
 }
@@ -75,13 +82,13 @@ function startTimer() {
 function renderTime() {
   minutesDisplay.textContent = getFormattedMinutes();
   secondsDisplay.textContent = getFormattedSeconds();
-  if (secondsElapsed >= totalSeconds) {
+  if (timeElapsed >= totalSeconds) {
       stopTimer();
     }
   }
   //formatting to appear on page as minutes and seconds
   function getFormattedMinutes() {
-      var secondsLeft = totalSeconds - secondsElapsed;
+      var secondsLeft = totalSeconds - timeElapsed;
       var minutesLeft = Math.floor(secondsLeft / 60);
       var formattedMinutes;
       if (minutesLeft < 10) {
@@ -92,7 +99,7 @@ function renderTime() {
       return formattedMinutes;
     }
   function getFormattedSeconds() {
-      var secondsLeft = (totalSeconds - secondsElapsed) % 60;
+      var secondsLeft = (totalSeconds -timeElapsed) % 60;
       var formattedSeconds;
       if (secondsLeft < 10) {
         formattedSeconds = "0" + secondsLeft;
@@ -101,16 +108,18 @@ function renderTime() {
       }
       return formattedSeconds;
     }
+//90 -108 put in startTimer function. then run incorrect subtraction 
+
 //clears once reaches 0, submit button pressed or all questions are answered
     function stopTimer(){
       clearInterval(interval)
-      secondsElapsed = 0;
+      timeElapsed = 0;
     renderTime();
     }
 
 //Start of Quiz functions loads questions and choices from array to quiz box
 function loadQuestion(){
-  console.log(i)
+  console.log("i = " + i)
     quizQuestion.textContent = questionArr[i].question;
     choice1.textContent = questionArr[i].choices[0]
     choice2.textContent = questionArr[i].choices[1]
@@ -122,17 +131,21 @@ function loadQuestion(){
 //time not subtracting if wrong(need to fix)
 function checkAnswers(event){
   console.log(i)
+  i++
    var selection = event.target
    if(selection.matches('.btn-primary')){
        var selectedItem = selection.id
-       console.log(selectedItem)
+       console.log("answer Selected is " + selectedItem)
        //checks if btn pressed matches correctAnswer in array
-       if(selectedItem === questionArr[i].correctAnswer){
+       if(selectedItem === questionArr[i-1].correctAnswer){
+         console.log(selectedItem)
+         console.log(questionArr[i].correctAnswer)
+         console.log(i)
        score++}
-      console.log(score)
+      console.log("score = " + score)
    } //if clicked other btn, will deduct time
        else{
-           totalSeconds - 30
+           incorrect++
            console.log(totalSeconds)
        }
        if(i < 5){
@@ -141,7 +154,7 @@ function checkAnswers(event){
          saveData()
        }
        //increments i to load the next question in loadQuestion function
-       i++
+       
   }
  //once submit button is pressed or last question answered Alerts Score
 function saveData(){
@@ -151,18 +164,9 @@ function saveData(){
   quizBox.remove()
   //hides submit button
   submitBtn.setAttribute("style", "display: none")
+  resultsBox.setAttribute("style", "display:  block")
 
-  //to load an input form to enter name, then enter score
-  var initialsForm = document.createElement("input");
-  scoreForm.append(initialsForm)
-  initialsForm.setAttribute('type', "text")
-  initialsForm.setAttribute('placeholder', "name")
-  var addNameBtn = document.createElement("button")
-  addNameBtn.setAttribute('id',"addbtn")
-  addNameBtn.textContent = "Add Initials"
-  var finalScore = document.createElement('p');
-  scoreForm.appendChild(finalScore)
-  finalScore.textContent = score
+
 
 }
 //event listeners for all the buttons
@@ -173,3 +177,31 @@ document.querySelector('#btn2').addEventListener('click', checkAnswers)
 document.querySelector('#btn3').addEventListener('click', checkAnswers)
 document.querySelector('#btn4').addEventListener('click', checkAnswers)
 
+
+//High Score page after Quiz
+var nameInput = document.querySelector("#nameinput");
+var highScoreList = document.querySelector("#namelist");
+var msgDiv = document.querySelector("#msg");
+
+function displayMessage(type, message) {
+  msgDiv.textContent = message;
+  msgDiv.setAttribute("class", type);
+}
+
+addInitialsBtn.addEventListener("click", function(event) {
+  event.preventDefault();
+  
+  // create user object from submission
+  var userInitials = nameInput.value.trim()
+
+  console.log(userInitials);
+
+    // set new submission
+    localStorage.setItem("userInitials", JSON.stringify(userInitials));
+    
+    // get most recent submission and create new list item to display
+    var lastUser = JSON.parse(localStorage.getItem("userInitials"));
+    var newHighScore = document.createElement("li");
+    highScoreList.appendChild(newHighScore)
+    highScoreList.textContent = "Initials: " + lastUser + " " + "Score: "+ score;
+});
