@@ -1,8 +1,4 @@
 
-/*if wrong button is pressed, then time will be subtracted from total
-form that allows to enter intials
-initials and score posted onto page
-*/
 //All Global Variables getting element from HTML
 var main = document.querySelector("main")
 var startBtn = document.getElementById('startBtn')
@@ -69,12 +65,7 @@ function startTimer() {
   if (totalSeconds > 0) {
     interval = setInterval(function() {
     timeElapsed++;
-        if(incorrect === 0){
-        var secondsElapsed = timeElapsed
-        renderTime();}
-        if(incorrect > 0){
-          var secondsElasped = timeElapsed + incorrect*20
-        }
+    renderTime()
       }, 1000);
   } 
 }
@@ -130,44 +121,41 @@ function loadQuestion(){
 //function runs after one of choices buttons is clicked, then moves to next question
 //time not subtracting if wrong(need to fix)
 function checkAnswers(event){
-  console.log(i)
   i++
    var selection = event.target
-   if(selection.matches('.btn-primary')){
+   if(selection.matches('.choicebtn')){
        var selectedItem = selection.id
        console.log("answer Selected is " + selectedItem)
        //checks if btn pressed matches correctAnswer in array
        if(selectedItem === questionArr[i-1].correctAnswer){
-         console.log(selectedItem)
-         console.log(questionArr[i].correctAnswer)
-         console.log(i)
-       score++}
-      console.log("score = " + score)
-   } //if clicked other btn, will deduct time
+          score++;
+      }
+    //if clicked other btn, will deduct time
        else{
            incorrect++
-           console.log(totalSeconds)
+           console.log(incorrect)
        }
-       if(i < 5){
+       if(i < questionArr.length){
         loadQuestion()
        } else {
          saveData()
        }
-       //increments i to load the next question in loadQuestion function
-       
+      console.log("button user clicked " + selectedItem)
+      console.log("correct answer " + questionArr[i-1].correctAnswer)
+      console.log("i = " + i)
+      console.log("score = " + score)
+      //increments i to load the next question in loadQuestion function
+   }
   }
  //once submit button is pressed or last question answered Alerts Score
 function saveData(){
-  alert("Thanks for playing!! you got " + score +" out of 6 correct");
+  alert("Thanks for playing!! you got " + score +" out of 6!");
   stopTimer();
   //removes questions from screen
   quizBox.remove()
   //hides submit button
   submitBtn.setAttribute("style", "display: none")
   resultsBox.setAttribute("style", "display:  block")
-
-
-
 }
 //event listeners for all the buttons
 document.querySelector('#startBtn').addEventListener('click', initQuiz)
@@ -205,3 +193,10 @@ addInitialsBtn.addEventListener("click", function(event) {
     highScoreList.appendChild(newHighScore)
     highScoreList.textContent = "Initials: " + lastUser + " " + "Score: "+ score;
 });
+//saved old code for possible timer deduction for incorrect score.
+/*if(incorrect === 0){
+  console.log("number incorrect " + incorrect)
+timeElapsed = timeElapsed;
+} if(incorrect > 0){
+  timeElapsed = timeElapsed + incorrect* 20
+}*/
