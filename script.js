@@ -122,7 +122,6 @@ function checkAnswers(event){
    var selection = event.target
    if(selection.matches('.choicebtn')){
        var selectedItem = selection.id
-       console.log("answer Selected is " + selectedItem)
        //checks if btn pressed matches correctAnswer in array
        if(selectedItem === questionArr[i-1].correctAnswer){
           score++;
@@ -154,6 +153,7 @@ function saveData(){
   //hides submit button
   submitBtn.setAttribute("style", "display: none")
   resultsBox.setAttribute("style", "display:  block")
+  localStorage.setItem("score", JSON.stringify(score));
 }
 //event listeners for all the buttons
 document.querySelector('#startBtn').addEventListener('click', initQuiz)
@@ -169,32 +169,31 @@ var nameInput = document.querySelector("#nameinput");
 var highScoreList = document.querySelector("#namelist");
 var msgDiv = document.querySelector("#msg");
 
+//puts in any previous entries from last 
+var lastUser = JSON.parse(localStorage.getItem("userInitials"));
+console.log(lastUser)
+var newHighScore = document.createElement("li");
+highScoreList.appendChild(newHighScore)
+highScoreList.textContent = "Initials: " + lastUser + " " + "Score: "+ score;
+
+
+
 function displayMessage(type, message) {
   msgDiv.textContent = message;
   msgDiv.setAttribute("class", type);
 }
-
 addInitialsBtn.addEventListener("click", function(event) {
   event.preventDefault();
-  
   // create user object from submission
   var userInitials = nameInput.value.trim()
-
   console.log(userInitials);
-
-    // set new submission
+    // set new submission after 
     localStorage.setItem("userInitials", JSON.stringify(userInitials));
-    
-    // get most recent submission and create new list item to display
+    //puts inputed name and score onto high score board
     var lastUser = JSON.parse(localStorage.getItem("userInitials"));
     var newHighScore = document.createElement("li");
-    highScoreList.appendChild(newHighScore)
+    highScoreList.appendchild(newHighScore)
     highScoreList.textContent = "Initials: " + lastUser + " " + "Score: "+ score;
+   
 });
-//saved old code for possible timer deduction for incorrect
-/*if(incorrect === 0){
-  console.log("number incorrect " + incorrect)
-timeElapsed = timeElapsed;
-} if(incorrect > 0){
-  timeElapsed = timeElapsed + incorrect* 20
-}*/
+
